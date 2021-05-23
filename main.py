@@ -1,6 +1,9 @@
 from tkinter import *
 from tkinter import ttk
 import os
+import time
+from threading import Thread
+import random
 
 #FUNCIÓN PARA CARGAR IMAGEN
 def CargarImagen(nombre):
@@ -152,11 +155,47 @@ def Ventana4(canvas):
     cambiar = Button(canvas,text = "Obtener",command = ObtenerItem)
     cambiar.place(x=300,y=420)
 
+    bAnimacion = Button(canvas,text = "Animación",command = lambda : Ventana5(canvas))
+    bAnimacion.place(x=400,y=420)
 
     ventana.mainloop()
 
+def Ventana5(canvas):
 
+    canvas = Canvas(ventana, width=500, height=500, bg="black")
+    canvas.place(x=0, y=0)
 
+    esferaImegen = CargarImagen("balon.png")
+    esfera = canvas.create_image(random.randint(0,300), random.randint(0,300), image = esferaImegen, anchor = NW)
+
+    animacion = Thread(target = Animacion, args = (esfera,canvas))
+    animacion.start()
+
+    ventana.mainloop()
+
+def Animacion(esfera,canvas):
+
+    x = 5
+    y = 5
+
+    while True:
+
+        temp = random.randint(0,10)
+
+        coords = canvas.coords(esfera)
+
+        if coords[0] <= 0:
+            x = temp
+        elif coords[0] >= 430:
+            x = -temp
+        elif coords[1] <= 0:
+            y = temp
+        elif coords[1] >= 430:
+            y = -temp
+
+        time.sleep(0.0001)
+
+        canvas.move(esfera,x,y)
 
 
 def Ventana3():
@@ -189,5 +228,3 @@ if __name__ == '__main__':
     ventana.resizable(width=NO, height=NO)  # MODIFICAR TAMAÑO
     ventana.config(bg="blue")  # CONFIGURACIÓN, COLOR
     VentanaPrincipal()
-
-
